@@ -617,7 +617,9 @@ header label {
   display: inline-block;
   text-decoration: none;
   overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
+  width: 243px;
 }
 .archive-item-link:hover {
   color: #2d96bd;

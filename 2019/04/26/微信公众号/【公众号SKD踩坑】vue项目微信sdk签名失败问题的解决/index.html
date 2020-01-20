@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="陈子豪">
+
+
+
+
+
+<title>【公众号SKD踩坑】vue项目微信sdk签名失败问题的解决 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">chenzihao&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">文章</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/archives">时光轴</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">chenzihao&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">文章</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/archives">时光轴</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">展开全部</a>
+        <a onclick="go_top()">返回顶部</a>
+        <a onclick="go_bottom()">滚到底部</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">【公众号SKD踩坑】vue项目微信sdk签名失败问题的解决</h1>
+            
+                <div class="post-meta">
+                    
+                        作者: <a itemprop="author" rel="author" href="/">陈子豪</a>
+                    
+
+                    
+                        <span class="post-time">
+                        日期: <a href="#">四月 26, 2019&nbsp;&nbsp;21:36:44</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    分类:
+                            
+                                <a href="/categories/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/">微信公众号</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述:"></a>问题描述:</h3><blockquote>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;公众号页面在调试时微信接口报错<code>invalid signature</code>签名错误，另外网页刷新一次后也会出现签名失败。虽然网上论述签名失败的文章很多，但笔者并没有找到有说明如何解决刷新页面后导致的签名时效的文章，所以整理了一下导致sdk失效的原因和解决方案</p>
+</blockquote>
+<h3 id="官方解决方法"><a href="#官方解决方法" class="headerlink" title="官方解决方法:"></a>官方解决方法:</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;首先，我们先看一下<a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141115">微信公众号平台官网</a>上提供的解决方案:</p>
+<blockquote>
+<p>1.确认签名算法正确，可用<code>http://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=jsapisign</code> 页面工具进行校验。</p>
+<p>2.确认config中nonceStr（js中驼峰标准大写S）, timestamp与用以签名中的对应noncestr, timestamp一致。</p>
+<p>3.确认url是页面完整的url(请在当前页面<code>alert(location.href.split(&#39;#&#39;)[0]</code>)确认)，包括’http(s)://‘部分，以及’？’后面的GET参数部分,但不包括’#’hash后面的部分。</p>
+<p>4.确认 config 中的 appid 与用来获取 jsapi_ticket 的 appid 一致。</p>
+<p>5.确保一定缓存<code>access_token</code>和<code>jsapi_ticket</code>。</p>
+<p>6.确保你获取用来签名的url是动态获取的，动态页面可参见实例代码中php的实现方式。如果是html的静态页面在前端通过ajax将url传到后台签名，前端需要用js获取当前页面除去’#’hash部分的链接（可用<code>location.href.split(&#39;#&#39;)[0]</code>获取,而且需要<code>encodeURIComponent</code>），因为页面一旦分享，微信客户端会在你的链接末尾加入其它参数，如果不是动态获取当前链接，将导致分享后的页面签名失败。</p>
+</blockquote>
+<h3 id="实际开发中遇到的问题及部分原因-vue路由采用history模式"><a href="#实际开发中遇到的问题及部分原因-vue路由采用history模式" class="headerlink" title="实际开发中遇到的问题及部分原因(vue路由采用history模式)"></a>实际开发中遇到的问题及部分原因(vue路由采用history模式)</h3><ol>
+<li>本地调试提示<code>invalid url domain</code>错误。原因是sdk只有线上环境才能使用(即前端浏览器地址是标准域名不是本地ip地址)</li>
+<li>使用线上地址调试依然报<code>invalid url domain</code>错误。原因是当前页面所在域名没有在公众号后台进行绑定,需要绑定业务域名和js接口地址才能正式使用</li>
+<li>使用<code>wx.getLocalImgData</code>接口报错,原因是该接口只能在真机上使用,本地调试不可以使用</li>
+<li>ios上刷新页面会导致签名失败。解决方案往下看</li>
+<li>由于项目有多个页面需要配置微信sdk，能否抽取成一个公共模块，减少重复配置代码</li>
+</ol>
+<h3 id="sdk地址签名的规律"><a href="#sdk地址签名的规律" class="headerlink" title="sdk地址签名的规律"></a>sdk地址签名的规律</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;网上查资料说，安卓是以当前路由地址签名，所以每次凡是用到签名的页面都是以当前页面地址签名(签名在安卓机上一切正常，ios上比较复杂)。ios则是以第一次进入页面的地址作为签名的url,例如从公众号入口进来访问的是页面A,签名页是页面D，那么从A-&gt;D无论经过多少次跳转都是以A的地址进行签名。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;不过网上没有人考虑过页面刷新这一点，经过笔者测试，ios上只要刷新(不管在哪个路由页面刷新)，都会导致签名失败。笔者的第一个想到的解决方案是签名页面D如果签名失败，则在config的error回调中进行再次签名,不过是以签名页面D的地址进行签名的，而不是一开始进来的地址。虽然这个方法解决的刷新导致签名失败的问题，但有个缺点，就是如果一直失败，可能导致error回调无限次数执行导致页面卡死。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;第一个方案似乎是解决了页面刷新导致的签名失败，但是在后面的开发中，笔者又遇到新的问题，此时项目中又有一个页面E需要使用签名。此时用第一个解决方案会有以下问题,页面D刷新后重新签名后可以正常使用，但是跳转到页面E时，页面E第一次签名和第二次签名都提示失败。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;经过笔者反复测试，得出失败的原因:当你刷新页面后，微信浏览器会认为这个页面是入口页，就是说以后签名都是以这个刷新过的页面的地址作为签名地址的，这也是<strong>为什么刷新页面后会出现签名失败</strong>。有了这个结论后，笔者找出了相对完美的解决方案。大体思路是，通过vue-router路由守卫，在页面t利用vuex刷新页面会使vuex数据重置的特点。第一次进来会保存入口页面地址并设置vuex状态为false。一旦vuex里的isReloaded变成true说明肯定刷新或是第一次进入页面，那么就记录下地址，以后签名时ios设备就以这个地址签名就行了</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>vue-router里写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">router.beforeEach((to, from, next) =&gt; &#123;</span><br><span class="line">  recordUrl(to)</span><br><span class="line">  next()</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">router.afterEach((to, from) =&gt; &#123;</span><br><span class="line">  let url</span><br><span class="line">  // 非ios设备</span><br><span class="line">  if (window.__wxjs_is_wkwebview !== true) &#123;</span><br><span class="line">    url = window.location.origin + to.fullPath</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    url = wsCache.get(&apos;url&apos;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  const SDKList = [&apos;chooseImage&apos;, &apos;previewImage&apos;, &apos;getLocalImgData&apos;, &apos;uploadImage&apos;, &apos;onMenuShareTimeline&apos;, &apos;onMenuShareAppMessage&apos;]</span><br><span class="line">  _getSignature(url).then(res =&gt; &#123;</span><br><span class="line">    _wxConfig(res, SDKList)</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>相关方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">// 记录路由地址用于配置sdk</span><br><span class="line">export function recordUrl(to) &#123;</span><br><span class="line">  if (store.state.isReloaded) &#123;</span><br><span class="line">    let url = location.origin + to.fullPath</span><br><span class="line">    wsCache.set(&apos;url&apos;, url)</span><br><span class="line">    store.commit(&apos;SET_RELOAD_STATUS&apos;, false)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 配置sdk</span><br><span class="line">export function _wxConfig(signObj, SDKList) &#123;</span><br><span class="line">  wx.config(&#123;</span><br><span class="line">    debug: false,</span><br><span class="line">    appId: signObj.appid,</span><br><span class="line">    timestamp: signObj.timestamp,</span><br><span class="line">    nonceStr: signObj.nonceStr,</span><br><span class="line">    signature: signObj.signature,</span><br><span class="line">    jsApiList: SDKList</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 获取签名</span><br><span class="line">export function _getSignature(url) &#123;</span><br><span class="line">  return new Promise((resolve, reject) =&gt; &#123;</span><br><span class="line">    getSignature(&#123;</span><br><span class="line">      url</span><br><span class="line">    &#125;).then(res =&gt; &#123;</span><br><span class="line">      resolve(res.data)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>vuex里写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const state = &#123;</span><br><span class="line">  isReloaded: true, // 用于判断有没有页面被用户刷新过</span><br><span class="line">&#125;</span><br><span class="line">export default state</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>作者:</span>
+                        <span>陈子豪</span>
+                    </p>
+                
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>相关标签:</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/vue/"># vue</a>
+                    
+                        <a href="/tags/bug/"># bug</a>
+                    
+                        <a href="/tags/%E5%BE%AE%E4%BF%A1sdk/"># 微信sdk</a>
+                    
+                        <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/"># 微信公众号</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <!-- <a href="javascript:window.history.back();">返回</a>
+                <span>· </span> -->
+                <a href="/">返回主页</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2019/05/04/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/mpvue/%E3%80%90mpvue%E3%80%91%E5%B8%A6%E5%8F%82%E6%95%B0%E8%B7%B3%E8%BD%AC%E7%9B%B8%E5%90%8C%E8%B7%AF%E7%94%B1%E5%90%8E%EF%BC%8C%E8%B7%AF%E7%94%B1%E5%8F%82%E6%95%B0%E4%BC%9A%E8%8E%B7%E5%8F%96%E9%94%99%E8%AF%AF/">【mpvue】带参数跳转相同路由后，路由参数会获取错误</a>
+            
+            
+            <a class="next" rel="next" href="/2019/02/02/%E5%89%8D%E7%AB%AF%E4%BC%98%E5%8C%96/%E9%87%8D%E7%BB%98%E5%92%8C%E5%9B%9E%E6%B5%81%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88/">重绘和回流优化方案</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 陈子豪 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

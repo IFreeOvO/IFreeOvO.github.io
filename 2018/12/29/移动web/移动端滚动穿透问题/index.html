@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="陈子豪">
+
+
+
+
+
+<title>移动端滚动穿透问题 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">chenzihao&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">文章</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/archives">时光轴</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">chenzihao&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">文章</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/archives">时光轴</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">展开全部</a>
+        <a onclick="go_top()">返回顶部</a>
+        <a onclick="go_bottom()">滚到底部</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">移动端滚动穿透问题</h1>
+            
+                <div class="post-meta">
+                    
+                        作者: <a itemprop="author" rel="author" href="/">陈子豪</a>
+                    
+
+                    
+                        <span class="post-time">
+                        日期: <a href="#">十二月 29, 2018&nbsp;&nbsp;11:10:13</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    分类:
+                            
+                                <a href="/categories/%E7%A7%BB%E5%8A%A8web/">移动web</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="1-问题描述"><a href="#1-问题描述" class="headerlink" title="1.问题描述"></a>1.问题描述</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;当底层页面和弹出层都有滚动的情况下,滚动弹出层的列表会导致底层页面一起滚动</p>
+<h3 id="2-网上查询到的方案-结合自己项目修改过了"><a href="#2-网上查询到的方案-结合自己项目修改过了" class="headerlink" title="2.网上查询到的方案(结合自己项目修改过了)"></a>2.网上查询到的方案(结合自己项目修改过了)</h3><p>1.&nbsp; <b>css之 overflow: hidden <b></b></b></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    overflow: hidden;</span><br><span class="line">    height: 100%;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>将样式加到 html 上，禁用 html 和 body 的滚动条，但是这个方案有两个<code>缺点</code>：</p>
+<ul>
+<li>a.由于 html 和 body的滚动条都被禁用，弹出层后页面的滚动位置会丢失，需要用 js 来还原。</li>
+<li>b.页面的背景还是能够有滚的动的效果</li>
+</ul>
+<p>2.&nbsp;  <b>js 之 touchmove + preventDefault<b><br><br></b></b></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dom.addEventListener(&apos;touchmove&apos;, function(e) &#123;</span><br><span class="line">    e.preventDefault();</span><br><span class="line">&#125;, false)</span><br></pre></td></tr></table></figure>
+<p> 这样用 js 阻止滚动后看起来效果不错了，但是也有一个<code>缺点</code>：弹出层里不能有其它需要滚动的内容<br>3.  <b>js + css <b></b></b></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.fixed &#123;</span><br><span class="line">    position: fixed;</span><br><span class="line">    width: 100%;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">openScroll() &#123;</span><br><span class="line">  this.$refs.launchPush.scrollTop = this.scrollTop</span><br><span class="line">  document.getElementsByTagName(&apos;html&apos;)[0].classList.remove(&apos;fixed&apos;)</span><br><span class="line">  document.body.classList.remove(&apos;fixed&apos;)</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">// 禁用滚动</span><br><span class="line">closeScroll() &#123;</span><br><span class="line">   // 记录滚出去的距离，方便下次还原</span><br><span class="line">  this.scrollTop = this.$refs.launchPush.scrollTop //launchPush是含滚动条的元素</span><br><span class="line">  document.getElementsByTagName(&apos;html&apos;)[0].classList.add(&apos;fixed&apos;)</span><br><span class="line">  document.body.classList.add(&apos;fixed&apos;)</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>如果只是用上面的 css，滚动条的位置同样会丢失。<br>所以如果需要保持滚动条的位置需要用 js 保存滚动条位置关闭的时候还原滚动位置</p>
+<h3 id="3-实战中遇到的问题及解决方法"><a href="#3-实战中遇到的问题及解决方法" class="headerlink" title="3.实战中遇到的问题及解决方法"></a>3.实战中遇到的问题及解决方法</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;先大体说一下页面结构，笔者是vue项目,底层页面比屏幕高，是一个全局滚动，弹出层则由遮盖层和一个滚动列表对话框组成(兄弟元素关系)。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;笔者一开始直接使用的是方案3,在开发工具上测试没有问题，但是在ios上发现仅仅只是移动一下弹出层的遮罩部分就开始出问题了,依然会滚动穿透。为了解决<strong>第一个问题</strong>，笔者采用的方法是阻止touchstart的默认行为，在vue里给遮盖层直接挂上下面的事件即可<code>(touchStartFn函数里可以不写任何东西)</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@touchstart.prevent=&apos;touchStartFn&apos;</span><br></pre></td></tr></table></figure>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;解决完这个问题后，笔者发现滚动列表部分的滚动穿透问题依然没有得到解决，在滑动中遇到的<strong>另一个问题</strong>就是当列表滚动到底部或顶部触发回弹后，滚动区就不能继续滚动了，连滚动条都不见了，非常影响用户体验。这个问题的解决方案见文章<code>&lt;&lt;ios元素滚动触发回弹后会将不再滚动的bug&gt;&gt;</code>。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;解决完上述两个问题后，笔者以为可以收尾了，但是事情发展不如人意。笔者在测试过程中<strong>又发现一个问题</strong>，就是当滚动列表滚动顶部或者滚动底部以后如果继续滑动，此时底层页面又会被带着一起滑动。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;笔者的给出的解决方法是监听带滚动条的元素，当它的scrollTop超出极值时，则进行重置，让滑动区域始终保持在接近底部或顶部的范围内，这个可以有效解决这个bug</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">moveFn(e) &#123;</span><br><span class="line">  var scrollTop = this.$refs.wrapList.scrollTop</span><br><span class="line">  var boxH = this.$refs.wrapList.clientHeight</span><br><span class="line">  var contentH = this.$refs.list.clientHeight</span><br><span class="line">  </span><br><span class="line">  // 滚动到顶部</span><br><span class="line">  if(scrollTop === 0) &#123;</span><br><span class="line">    this.$refs.wrapList.scrollTop = 1</span><br><span class="line">  &#125; </span><br><span class="line">  </span><br><span class="line">  // 滚动到底部</span><br><span class="line">  if((scrollTop + boxH) &gt;= contentH) &#123;</span><br><span class="line">    this.$refs.wrapList.scrollTop = contentH - boxH - 1</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>作者:</span>
+                        <span>陈子豪</span>
+                    </p>
+                
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>相关标签:</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/vue/"># vue</a>
+                    
+                        <a href="/tags/bug/"># bug</a>
+                    
+                        <a href="/tags/%E7%A7%BB%E5%8A%A8web/"># 移动web</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <!-- <a href="javascript:window.history.back();">返回</a>
+                <span>· </span> -->
+                <a href="/">返回主页</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2019/02/02/%E5%89%8D%E7%AB%AF%E4%BC%98%E5%8C%96/%E9%87%8D%E7%BB%98%E5%92%8C%E5%9B%9E%E6%B5%81%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88/">重绘和回流优化方案</a>
+            
+            
+            <a class="next" rel="next" href="/2018/12/29/%E7%A7%BB%E5%8A%A8web/ios%E5%85%83%E7%B4%A0%E6%BB%9A%E5%8A%A8%E8%A7%A6%E5%8F%91%E5%9B%9E%E5%BC%B9%E5%90%8E%E4%BC%9A%E5%B0%86%E4%B8%8D%E5%86%8D%E6%BB%9A%E5%8A%A8%E7%9A%84bug/">ios元素滚动触发回弹后会将不再滚动的bug</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 陈子豪 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

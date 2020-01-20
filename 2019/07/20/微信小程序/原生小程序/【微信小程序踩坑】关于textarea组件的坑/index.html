@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="陈子豪">
+
+
+
+
+
+<title>【微信小程序踩坑】关于textarea组件的坑 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">chenzihao&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">文章</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/archives">时光轴</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">chenzihao&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">文章</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/archives">时光轴</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">展开全部</a>
+        <a onclick="go_top()">返回顶部</a>
+        <a onclick="go_bottom()">滚到底部</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">【微信小程序踩坑】关于textarea组件的坑</h1>
+            
+                <div class="post-meta">
+                    
+                        作者: <a itemprop="author" rel="author" href="/">陈子豪</a>
+                    
+
+                    
+                        <span class="post-time">
+                        日期: <a href="#">七月 20, 2019&nbsp;&nbsp;11:10:13</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    分类:
+                            
+                                <a href="/categories/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/">微信小程序</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h3><p>需要用小程序原生组件textarea实现个输入框，用于发送用户评论</p>
+<h3 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h3><ul>
+<li><p>自定义textarea最大高度(即最多显示几行文本)</p>
+<blockquote>
+<p>解决思路：textarea组件提供了<code>bindlinechange</code>方法可以监听输入框行数变化,通过动态修改组件的类样式,给组件加上固定高度，并将组件<code>auto-height</code>属性设置为<code>true</code>(<b style="color:red"><em>注意</em></b>,*设置<code>auto-height</code>为<code>true</code>时，<code>style.height</code>不生效**)。有一个细节,textarea组件的初始高度会大于一行文本的高度,所以初始化组件时就可以设置<code>auto-height</code>为<code>true</code>，让它变成一行的高度</p>
+</blockquote>
+</li>
+<li><p>点击发送按钮时，并没有获得textarea的value值</p>
+<blockquote>
+<p>官方文档上有说明: textarea 的 <code>blur</code> 事件会晚于页面上的 <code>tap</code> 事件，如果需要在 <code>button</code> 的点击事件获取 <code>textarea</code>，可以使用 <code>form</code> 的 <code>bindsubmit</code>。<strong>这里需要注意一点的是，需要给是textarea设置<code>name</code>属性,button设置<code>open-type</code>属性</strong></p>
+</blockquote>
+</li>
+<li><p>需要通过点击页面上某个按钮后，才能显示我们的输入框，其他条件下不显示</p>
+<blockquote>
+<p>解决思路：通过js动态将textarea的<code>focus</code>属性设置为<code>true</code>即可,<code>auto-focus</code>属性我试过了，没有用</p>
+</blockquote>
+</li>
+<li><p>键盘弹起时，输入框需要显示并固定在可视区底部</p>
+<blockquote>
+<p>解决思路: 我采用给组件固定定位的方式实现这个功能，通过vue计算属性(mpvue框架),给组件style一个动态的bottom值，有关键盘的高度，可以通过组件的<code>bindfocus</code>方法获取到。<br>(<strong>细节：如果 textarea 是在一个 position:fixed 的区域，需要显示指定属性 fixed 为 true</strong>)</p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>另一个解决思路:如果通过<code>adjust-position</code>属性实现键盘弹起时输入框自动置底，会有一个缺点，即如果不设置相应的<code>cursor-spacing</code>的属性来调整光标和键盘的位置，则两者在会上下紧挨在一起</p>
+</blockquote>
+<ul>
+<li>textarea和button没有对齐并垂直居中<blockquote>
+<p>解决方案：给<code>button</code>和<code>textarea</code>的样式同时加上<code>vertical-align: middle;</code>和<code>display: inline-block;</code></p>
+</blockquote>
+</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>作者:</span>
+                        <span>陈子豪</span>
+                    </p>
+                
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>相关标签:</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/bug/"># bug</a>
+                    
+                        <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/"># 微信小程序</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <!-- <a href="javascript:window.history.back();">返回</a>
+                <span>· </span> -->
+                <a href="/">返回主页</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2019/09/22/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/mpvue/%E3%80%90mpvue%E3%80%91%E8%B7%B3%E8%BD%AC%E7%9B%B8%E5%90%8C%E8%B7%AF%E7%94%B1%EF%BC%8C%E5%86%8D%E8%BF%94%E5%9B%9E%E9%A1%B5%E9%9D%A2%E6%95%B0%E6%8D%AE%E4%BC%9A%E4%B8%A2%E5%A4%B1/">【mpvue】跳转相同路由，再返回页面数据会丢失</a>
+            
+            
+            <a class="next" rel="next" href="/2019/06/23/%E7%A7%BB%E5%8A%A8web/%E9%98%BB%E6%AD%A2%E6%B5%8F%E8%A7%88%E5%99%A8%E9%BB%98%E8%AE%A4%E7%9A%84%E5%9B%BE%E7%89%87%E9%A2%84%E8%A7%88%E8%A1%8C%E4%B8%BA/">阻止浏览器默认的图片预览行为</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 陈子豪 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

@@ -1078,6 +1078,26 @@ header label {
   border-color: #3273dc !important;
   background-color: #3273dc !important;
 }
+.dark-theme .posts .item {
+  background-color: #292a2d;
+  border: 1px solid #a9a9b3;
+}
+.dark-theme .posts .item .bg {
+  border-bottom: 1px solid #a9a9b3;
+}
+.dark-theme .posts .item .bg .photo {
+  background-color: #292a2d;
+}
+.dark-theme .posts .item .describe .title a {
+  color: #a9a9b3;
+}
+.dark-theme .posts .item .describe .date {
+  color: #a9a9b3;
+}
+.dark-theme .posts .item .describe .meta .r a {
+  color: #a9a9b3;
+  border: 2px solid #a9a9b3;
+}
 .post-wrap p {
   font-size: 1em;
   margin: 1em 0 1em 0;

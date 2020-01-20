@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="陈子豪">
+
+
+
+
+
+<title>【hexo】文章里插入的本地图片不显示 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">chenzihao&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">文章</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/archives">时光轴</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">chenzihao&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">文章</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/archives">时光轴</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">展开全部</a>
+        <a onclick="go_top()">返回顶部</a>
+        <a onclick="go_bottom()">滚到底部</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">【hexo】文章里插入的本地图片不显示</h1>
+            
+                <div class="post-meta">
+                    
+                        作者: <a itemprop="author" rel="author" href="/">陈子豪</a>
+                    
+
+                    
+                        <span class="post-time">
+                        日期: <a href="#">一月 2, 2020&nbsp;&nbsp;15:09:39</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    分类:
+                            
+                                <a href="/categories/hexo/">hexo</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>笔者的hexo版本为4.0，根据网上教程采用了下面两种方式导入本地图片</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 方式1：</span><br><span class="line">&#123;% asset_img error.png This is an example image %&#125;</span><br><span class="line">// 方式2：</span><br><span class="line">![错误2](error.png)</span><br></pre></td></tr></table></figure>
+
+<p>但是运行后文章里插入的本地图片并不能正确显示。检查dom发现图片的加载路径不正确。src里正确的路径应该为<code>/2019/10/02/react-native/react-native%20run-ios%20%E9%81%87%E5%88%B0%E7%9A%84%E6%8A%A5%E9%94%99%E5%8F%8A%E5%85%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/error2.png</code></p>
+<p><img src="/2020/01/02/%E5%89%8D%E7%AB%AF%E5%B7%A5%E5%85%B7/hexo/%E3%80%90hexo%E3%80%91%E6%96%87%E7%AB%A0%E9%87%8C%E6%8F%92%E5%85%A5%E7%9A%84%E6%9C%AC%E5%9C%B0%E5%9B%BE%E7%89%87%E4%B8%8D%E6%98%BE%E7%A4%BA/error.png" alt="错误2"></p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>之前加载不了图片的原因是采用了插件<code>npm install hexo-asset-image --save</code>,该版本为<code>1.0.0</code>，此插件解析处理的路径映射关系与<code>0.0.5</code>版有很大区别。根据网上方案采用<code>npm install https://github.com/CodeFalling/hexo-asset-image --save</code>安装<code>0.0.5</code>版本后,再用<code>![错误2](error.png)</code>方式引入本地图片即可正常显示(官方提供的方式没试成功)</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>作者:</span>
+                        <span>陈子豪</span>
+                    </p>
+                
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>相关标签:</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86/"># 报错处理</a>
+                    
+                        <a href="/tags/hexo/"># hexo</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <!-- <a href="javascript:window.history.back();">返回</a>
+                <span>· </span> -->
+                <a href="/">返回主页</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2019/10/02/react-native/react-native%20run-ios%20%E9%81%87%E5%88%B0%E7%9A%84%E6%8A%A5%E9%94%99%E5%8F%8A%E5%85%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">【RN踩坑】执行react-native run-ios命令 遇到的报错及其解决方案</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 陈子豪 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

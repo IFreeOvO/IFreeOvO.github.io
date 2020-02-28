@@ -12,7 +12,7 @@
 
 
 
-<title>centos安装docker-compose网速太慢 | Hexo</title>
+<title>ssh连接服务器报错，REMOTE HOST IDENTIFICATION HAS CHANGED | Hexo</title>
 
 
 
@@ -178,7 +178,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">centos安装docker-compose网速太慢</h1>
+            <h1 class="post-title">ssh连接服务器报错，REMOTE HOST IDENTIFICATION HAS CHANGED</h1>
             
                 <div class="post-meta">
                     
@@ -187,14 +187,14 @@
 
                     
                         <span class="post-time">
-                        日期: <a href="#">二月 15, 2020&nbsp;&nbsp;14:28:38</a>
+                        日期: <a href="#">二月 29, 2020&nbsp;&nbsp;1:38:15</a>
                         </span>
                     
                     
                         <span class="post-category">
                     分类:
                             
-                                <a href="/categories/docker/">docker</a>
+                                <a href="/categories/ssh/">ssh</a>
                             
                         </span>
                     
@@ -203,8 +203,12 @@
         </header>
 
         <div class="post-content">
-            <h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>使用<code>sudo curl -L &quot;https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</code>安装docker-compose,下载速度几乎为0</p>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>换个下载地址尝试<code>sudo curl -L &quot;https://get.daocloud.io/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</code></p>
+            <h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述:"></a>问题描述:</h3><p>笔者初始化阿里云服务器后，再次进行ssh连接，控制台报错</p>
+<blockquote>
+<p>@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@<br>@ WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED! @<br>@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@<br>IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!<br>Someone could be eavesdropping on you right now (man-in-the-middle attack)!<br>It is also possible that a host key has just been changed.<br>The fingerprint for the RSA key sent by the remote host is<br>da:f7:3e:ba:f7:00:e6:44:76:f2:58:6e:48:<strong>**</strong>.<br>Please contact your system administrator.<br>Add correct host key in /用户home目录/.ssh/known_hosts to get rid of this message.<br>Offending RSA key in /用户home目录/.ssh/known_hosts:1<br>RSA host key for ip地址 has changed and you have requested strict checking.<br>Host key verification failed.</p>
+</blockquote>
+<h3 id="问题产生原因"><a href="#问题产生原因" class="headerlink" title="问题产生原因"></a>问题产生原因</h3><p>网上说这个问题的原因是,第一次使用SSH连接时，会生成一个认证，储存在客户端的known_hosts中。笔者猜测应该是服务器初始化时导致之前存的验证密钥变了，使得本机和服务器的密钥对不匹配</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>在本地电脑上执行<code>ssh-keygen -R 168.12.xx.xx</code>(写上阿里云服务器的ip地址)，该指令可以从 known_hosts 文件中删除所有属于 hostname 的密钥</p>
 
         </div>
 
@@ -228,11 +232,7 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/docker/"># docker</a>
-                    
-                        <a href="/tags/docker-compose/"># docker-compose</a>
-                    
-                        <a href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"># 环境搭建</a>
+                        <a href="/tags/%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86/"># 报错处理</a>
                     
                         
                 </span>
@@ -245,10 +245,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2020/02/15/docker/centos%E5%BC%80%E5%90%AFdokcer%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F/">centos开启dokcer镜像加速</a>
             
-            
-            <a class="next" rel="next" href="/2020/01/28/nodejs/%E3%80%90egg%E6%A1%86%E6%9E%B6%E3%80%91post%E8%AF%B7%E6%B1%82%E6%8A%A5%E9%94%99%22invalid%20csrf%20token%22/">【egg框架】postman发送post请求报错"invalid csrf token"</a>
+            <a class="next" rel="next" href="/2020/02/29/%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9B%B8%E5%85%B3/ssh%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/">ssh免密登录阿里云服务器</a>
             
         </section>
 

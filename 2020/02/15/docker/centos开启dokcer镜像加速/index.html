@@ -12,7 +12,7 @@
 
 
 
-<title>【mpvue】跳转相同路由，再返回页面数据会丢失 | Hexo</title>
+<title>centos开启dokcer镜像加速 | Hexo</title>
 
 
 
@@ -178,7 +178,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">【mpvue】跳转相同路由，再返回页面数据会丢失</h1>
+            <h1 class="post-title">centos开启dokcer镜像加速</h1>
             
                 <div class="post-meta">
                     
@@ -187,14 +187,14 @@
 
                     
                         <span class="post-time">
-                        日期: <a href="#">九月 22, 2019&nbsp;&nbsp;21:59:12</a>
+                        日期: <a href="#">二月 15, 2020&nbsp;&nbsp;15:23:02</a>
                         </span>
                     
                     
                         <span class="post-category">
                     分类:
                             
-                                <a href="/categories/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/">微信小程序</a>
+                                <a href="/categories/docker/">docker</a>
                             
                         </span>
                     
@@ -203,21 +203,8 @@
         </header>
 
         <div class="post-content">
-            <h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>此问题主要出现在相同路由的详情页重复跳转的情况。先假设页面A路径为<code>/page/a/main?id=1</code>，页面A’路径为<code>/page/a/main?id=2</code>，页面B路径为<code>/page/b/main?id=1</code>。那么bug的产生方式大体分为两种情况：</p>
-<blockquote>
-<ol>
-<li>用户先跳转页面A，再跳转到页面A’，之后返回页面A。此时看到的是页面A’的数据</li>
-<li>用户跳转顺序为页面A-&gt;页面B-&gt;页面A’，之后返回页面A。此时看到的是页面A’的数据</li>
-</ol>
-</blockquote>
-<h3 id="问题产生的原因"><a href="#问题产生的原因" class="headerlink" title="问题产生的原因"></a>问题产生的原因</h3><p>mpvue会把相同路由的页面视为同一份数据，也就是说当你前往页面A’，mpvue不会创建新的页面对象，而是复用页面A,所以会在页面A原有的数据上进行修改，导致返回页面后，数据仍是上个相同路由页面的数据</p>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
-<li><p>第一种情况的解决:<br>跳转页面A’前先保存当前页面A数据以栈的形式存储到小程序本地。由于页面A’返回会触发onUnload的生命周期，所以在A’页面unload时，判断本地是否存过A’数据，如果存储过则删除并更新本地数据。返回页面A时会执行onShow生命周期，此时取出本地数据赋值给变量localData(该步骤还需要用一个变量flag来标识当前页面是否是第一次load，不然的话，从A到A’页面后，A’页面也会执行一次恢复数据的方法，导致看到的是A页面的数据而不是A’的数据)，将页面A数据从localData取出并更新页面数据。</p>
-</li>
-<li><p>第二种情况的解决:<br>此方案需要比上一个方案多一步记录上一个路由的操作,每个页面unload时将当前页面的路由用一个变量存储在本地,这个本地变量用于记录上一个页面的路径。这样的话当页面A-&gt;页面B-&gt;页面A’，再返回页面A时，只需要判断当前页面路径和上一个页面路径是否相同，如果两个路径不相同(不用考虑路由参数)，则在onShow里执行方法恢复数据即可。</p>
-</li>
-</ul>
-
+            <h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>docker下载镜像速度太慢</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 修改配置</span><br><span class="line">vi /etc/docker/daemon.json</span><br><span class="line"></span><br><span class="line">// 加入一下代码</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://dhq9bx4f.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 控制台执行下面两行代码</span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
         </div>
 
         
@@ -240,11 +227,9 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/bug/"># bug</a>
+                        <a href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"># 环境搭建</a>
                     
-                        <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/"># 微信小程序</a>
-                    
-                        <a href="/tags/mpvue/"># mpvue</a>
+                        <a href="/tags/docker/"># docker</a>
                     
                         
                 </span>
@@ -257,10 +242,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2019/10/02/react-native/react-native%20run-ios%20%E9%81%87%E5%88%B0%E7%9A%84%E6%8A%A5%E9%94%99%E5%8F%8A%E5%85%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">【RN踩坑】执行react-native run-ios命令 遇到的报错及其解决方案</a>
             
-            
-            <a class="next" rel="next" href="/2019/07/20/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/%E5%8E%9F%E7%94%9F%E5%B0%8F%E7%A8%8B%E5%BA%8F/%E3%80%90%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E8%B8%A9%E5%9D%91%E3%80%91%E5%85%B3%E4%BA%8Etextarea%E7%BB%84%E4%BB%B6%E7%9A%84%E5%9D%91/">【微信小程序踩坑】关于textarea组件的坑</a>
+            <a class="next" rel="next" href="/2020/02/15/docker/centos%E5%AE%89%E8%A3%85docker-compose%E7%BD%91%E9%80%9F%E5%A4%AA%E6%85%A2/">centos安装docker-compose网速太慢</a>
             
         </section>
 

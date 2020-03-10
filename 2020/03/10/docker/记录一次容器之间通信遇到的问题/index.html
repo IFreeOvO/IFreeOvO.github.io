@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="IFreeOvO">
+
+
+
+
+
+<title>【踩坑笔记】记录一次容器之间通信遇到的问题 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">IFreeOvO&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">文章</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/archives">时光轴</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">IFreeOvO&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">文章</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/archives">时光轴</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">展开全部</a>
+        <a onclick="go_top()">返回顶部</a>
+        <a onclick="go_bottom()">滚到底部</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">【踩坑笔记】记录一次容器之间通信遇到的问题</h1>
+            
+                <div class="post-meta">
+                    
+                        作者: <a itemprop="author" rel="author" href="/">IFreeOvO</a>
+                    
+
+                    
+                        <span class="post-time">
+                        日期: <a href="#">三月 10, 2020&nbsp;&nbsp;23:25:53</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    分类:
+                            
+                                <a href="/categories/docker/">docker</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>笔者之前按照DOClever官方在github上提供的docker部署方式进行安装，根据官方提供的docker-compose修改后如下：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">"2"</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">DOClever:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">lw96/doclever</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">DOClever</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="number">10040</span><span class="string">:10000</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/本地路径/file:/root/DOClever/data/file</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/本地路径/img:/root/DOClever/data/img</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/本地路径/tmp:/root/DOClever/data/tmp</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">DB_HOST=mongodb://mongo:27017/DOClever</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">PORT=10000</span></span><br><span class="line">    <span class="attr">links:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">mongo:mongo</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">mongo:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mongo:latest</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">doc/mongodb</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/本地路径/db:/data/db</span></span><br></pre></td></tr></table></figure>
+<p>这么做有个缺点，就是mongo服务只能让doclever自己用，其他人使用不了，因为mongo没有对外暴露端口。</p>
+<h3 id="尝试分开部署方案"><a href="#尝试分开部署方案" class="headerlink" title="尝试分开部署方案"></a>尝试分开部署方案</h3><p>于是上网找了mongo的docker安装方案，先对mongo服务进行部署，相关docker-compose如下：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3.1'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">mongo:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mongo</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">mongo</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MONGO_INITDB_ROOT_USERNAME:</span> <span class="string">root</span></span><br><span class="line">      <span class="attr">MONGO_INITDB_ROOT_PASSWORD:</span> <span class="string">密码</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">27017</span><span class="string">:27017</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/本地路径/db:/data/db</span></span><br></pre></td></tr></table></figure>
+<p>并用gui工具连接测试了一下，连接正常。</p>
+<p>接着笔者开始部署doclever，其docker-compose配置如下：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">"2"</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">DOClever:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">lw96/doclever</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">DOClever</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="number">10040</span><span class="string">:10000</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/本地路径/file:/root/DOClever/data/file</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/本地路径/img:/root/DOClever/data/img</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/本地路径/tmp:/root/DOClever/data/tmp</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">DB_HOST=mongodb://root:密码@47.xx.xx.xx:27017/DOClever</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">PORT=10000</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">DB_FILE=/root/DOClever/data/file</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">DB_IMG=/root/DOClever/data/img</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">DB_TEMP=/root/DOClever/data/tmp</span></span><br></pre></td></tr></table></figure>
+<p>docker安装完后执行<code>docker ps</code>查看容器确认服务已经在运行，一切看似很顺利。但是用浏览器访问10040发现访问不了页面。于是去查看防火墙，也没发现问题。<br>通过与之前的配置方案对比，我分析问题应该出在<code>- DB_HOST=mongodb://root:密码@47.xx.xx.xx:27017/DOClever</code>这一行上，因为其他配置基本没变，只是连接数据库多个密码权限。</p>
+<h3 id="为什么数据库加了密码反而访问不了页面"><a href="#为什么数据库加了密码反而访问不了页面" class="headerlink" title="为什么数据库加了密码反而访问不了页面"></a>为什么数据库加了密码反而访问不了页面</h3><p>其实是笔者对mongo的使用方式理解有误。<br>我们先来解释一下<code>mongodb://root:密码@47.xx.xx.xx:27017/DOClever</code>这句话的意思，它是指连接<code>47.xx.xx.xx:27017</code>地址上的<code>DOClever</code>数据库，用户名为root。而我之前理解的是使用root用户可以访问任何数据库，但是初始的mongo只提供了一个名为<code>admin</code>数据库给root用户使用(我猜正确的理解是，root并非是所有数据库的超级管理员)。<br>我查了下mongo的使用文档，发现正确的使用姿势是先创建数据库并绑定一个角色才能用。也就是说我们要先有个叫<code>DOClever</code>的数据库，然后绑定一个角色。于是我去创建好这个数据库，给了它一个名叫<code>doclever</code>的角色，<code>role</code>值设为<code>dbOwner</code>。<br>然后把docker-compose配置修改成<code>- DB_HOST=mongodb://doclever:密码@47.xx.xx.xx:27017/DOClever</code>，重新部署容器，再次访问页面，成功解决！</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>作者:</span>
+                        <span>IFreeOvO</span>
+                    </p>
+                
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>相关标签:</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/docker/"># docker</a>
+                    
+                        <a href="/tags/mongo/"># mongo</a>
+                    
+                        <a href="/tags/%E5%AE%B9%E5%99%A8%E9%80%9A%E4%BF%A1/"># 容器通信</a>
+                    
+                        <a href="/tags/DOClever/"># DOClever</a>
+                    
+                        <a href="/tags/%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E9%97%AE%E9%A2%98/"># 项目部署问题</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <!-- <a href="javascript:window.history.back();">返回</a>
+                <span>· </span> -->
+                <a href="/">返回主页</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2020/03/10/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/%E5%8E%9F%E7%94%9F%E5%B0%8F%E7%A8%8B%E5%BA%8F/%E3%80%90%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E3%80%91%E5%A6%82%E4%BD%95%E9%9A%90%E8%97%8Fscroll-view%E7%BB%84%E4%BB%B6%E7%9A%84%E6%BB%9A%E5%8A%A8%E6%9D%A1/">【微信小程序】如何隐藏scroll-view组件的滚动条</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© IFreeOvO | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

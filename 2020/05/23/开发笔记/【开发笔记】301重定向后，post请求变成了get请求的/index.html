@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="IFreeOvO">
+
+
+
+
+
+<title>【开发笔记】301重定向后，post请求变成了get请求，导致服务器400错误 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">IFreeOvO&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">文章</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/archives">时光轴</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">IFreeOvO&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">文章</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/archives">时光轴</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">展开全部</a>
+        <a onclick="go_top()">返回顶部</a>
+        <a onclick="go_bottom()">滚到底部</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">【开发笔记】301重定向后，post请求变成了get请求，导致服务器400错误</h1>
+            
+                <div class="post-meta">
+                    
+                        作者: <a itemprop="author" rel="author" href="/">IFreeOvO</a>
+                    
+
+                    
+                        <span class="post-time">
+                        日期: <a href="#">五月 23, 2020&nbsp;&nbsp;16:17:01</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    分类:
+                            
+                                <a href="/categories/%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/">开发笔记</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>登录后台系统时出现接口400错误，仔细审查发现接口请求了两次，第一次是个301的post请求，第二次是个400的get请求，两者请求地址一样，但是请求方法从post变成get，第二个请求丢失post请求里原本携带的参数，所以服务器400错误。</p>
+<h3 id="定位问题"><a href="#定位问题" class="headerlink" title="定位问题"></a>定位问题</h3><p>第二个接口因为是个错误的请求，并且这个请求是由第一个接口301重定向导致的，故可以忽略这个接口。所以我先排查是什么原因导致接口301重定向。我通过百度了解到请求协议不一致会导致这个问题，找到这个问题点，那么接下来就好分析了。因为请求协议不一致的话，在第一条请求发出时，浏览器就会提示跨域，但实际并没有，说明不是前端产生的问题，然后继续排查，发现nginx代理配置不对，剩下的问题就好解决了。</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>nginx代理请求地址时，把<code>http</code>换成<code>https</code>后，再次请求，恢复正常。（通常这类问题，是由于协议不一致导致。所以根据实际情况修改前端或后端的请求地址协议即可）</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>作者:</span>
+                        <span>IFreeOvO</span>
+                    </p>
+                
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>相关标签:</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%8E%A5%E5%8F%A3301%E9%97%AE%E9%A2%98/"># 接口301问题</a>
+                    
+                        <a href="/tags/%E6%8E%A5%E5%8F%A3400%E9%97%AE%E9%A2%98/"># 接口400问题</a>
+                    
+                        <a href="/tags/%E6%8E%A5%E5%8F%A3%E8%AF%B7%E6%B1%82%E5%BC%82%E5%B8%B8/"># 接口请求异常</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <!-- <a href="javascript:window.history.back();">返回</a>
+                <span>· </span> -->
+                <a href="/">返回主页</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2020/05/15/%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/%E3%80%90%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0%E3%80%91%E6%9C%AC%E5%9C%B0%E8%B0%83%E8%AF%95%E6%8E%A5%E5%8F%A3%E5%87%BA%E7%8E%B0301%EF%BC%8C%E4%BD%86%E6%98%AF%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E6%8E%A5%E5%8F%A3%E6%AD%A3%E5%B8%B8%E7%9A%84%E9%97%AE%E9%A2%98/">【开发笔记】本地调试接口出现301，但是测试环境接口正常的问题</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© IFreeOvO | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>
